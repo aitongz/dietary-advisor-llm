@@ -1,0 +1,15 @@
+case_id,system,allergen_violation,restricted_term_count,nutrition_improvement_score,craving_preservation_score,schema_complete,overall_score
+case_001,baseline,False,0,0,4,True,3.5
+case_001,validator_guided,False,0,2,4,True,3.9
+case_002,baseline,False,2,3,3,True,3.5
+case_002,validator_guided,False,2,10,5,True,5.3
+case_003,baseline,False,2,0,4,True,3.1
+case_003,validator_guided,False,2,8,5,True,4.9
+case_004,baseline,True,2,2,4,True,2.0
+case_004,validator_guided,False,2,6,5,True,4.5
+case_005,baseline,False,1,2,4,True,3.7
+case_005,validator_guided,False,1,8,5,True,5.1
+case_006,baseline,False,0,0,5,True,3.7
+case_006,validator_guided,False,2,4,4,True,3.9
+SUMMARY,baseline,0.167,1.167,1.167,4.0,1.0,3.25
+SUMMARY,validator_guided,0.0,1.5,6.333,4.667,1.0,4.6
