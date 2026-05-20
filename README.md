@@ -52,6 +52,10 @@ python3 src/evaluate.py \
 
 The script compares sample baseline outputs against validator-guided outputs and writes a CSV with per-case and aggregate metrics.
 
+## Data Note
+Please note that the current prototype uses **synthetic data** (`sample_cases.jsonl` and `sample_model_outputs.jsonl`) to demonstrate the end-to-end evaluation pipeline without requiring real user medical/dietary data. In a production scenario, this synthetic benchmark would be replaced by diverse, human-annotated datasets collected via the Anote platform.
+Moreover, the synthetic baseline outputs are intentionally designed to include edge cases (e.g., hallucinating an allergen or failing a constraint) to test if the evaluation pipeline can correctly catch safety violations and score them accurately.
+
 ## Evaluation Metrics
 
 The prototype includes automatic checks for:
