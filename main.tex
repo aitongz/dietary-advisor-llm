@@ -1,0 +1,138 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\title{CraveAlign: Human-in-the-Loop Evaluation for Constraint-Safe Recipe Adaptation by LLM Dietary Advisors}
+\author{Aitong Zhang}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Large language models are increasingly used for health-adjacent advice, including meal planning and recipe generation. However, most current evaluations focus on whether a model can produce plausible dietary suggestions, not whether it can safely adapt foods that users actually crave under patient-specific constraints. This paper proposes \textit{CraveAlign}, a benchmark and evaluation framework for testing whether LLM dietary advisors can transform craving-driven recipe requests into safe, feasible, and nutritionally improved alternatives. We define a set of user profiles with allergies, dietary restrictions, strictness preferences, cultural taste preferences, and health goals; pair them with common craving prompts; and evaluate generated recipe adaptations across constraint adherence, safety, feasibility, nutrition improvement, preference fit, and craving preservation. Because many judgments in this domain are subjective and context-dependent, we frame human-in-the-loop evaluation as central rather than optional. A pilot prototype demonstrates a lightweight rule-based evaluator and a rubric suitable for expert or crowd annotator review. The intended contribution is an evaluation-first approach to personalized nutrition AI that aligns with applied AI systems requiring both measurable behavior and human feedback.
+\end{abstract}
+
+\section{Introduction}
+Standard medical and wellness advice often tells patients what to avoid: less sodium, less added sugar, no allergens, fewer saturated fats, or no specific trigger foods. Yet sustainable behavior change depends not only on restrictions but also on adherence, satisfaction, and cultural fit. A user who craves fried chicken, ramen, pizza, or a sweet drink may not be helped by a generic ``eat a salad instead'' recommendation. The practical challenge is to preserve enough of the original craving while adapting the recipe to the user's health constraints.
+
+This challenge also involves trade-offs. Some users may need the strictest possible version of a recipe because of a severe allergy or clinical restriction, while others may prefer a gradual adaptation that keeps more of the original dish. Similarly, a recipe can be lower calorie but rely on highly processed substitutes, or it can emphasize whole-food ingredients while not minimizing calories as aggressively. A useful evaluation should make these trade-offs explicit rather than hide them behind a single generic health score.
+
+LLM-based dietary advisors appear well suited to this task because they can interpret natural language cravings, reason over ingredients, and generate customized recipe text. However, this flexibility also creates evaluation challenges. A fluent answer can still violate an allergy, suggest unrealistic substitutions, ignore a sodium restriction, or erase the food identity that motivated the request. In health-adjacent settings, evaluation cannot be limited to general helpfulness or textual quality.
+
+This paper explores the following question: \textbf{How should we evaluate whether an LLM dietary advisor safely and usefully adapts craving-driven recipes for users with dietary restrictions?}
+
+The proposed answer is an evaluation framework combining automatic checks, model-assisted review, and human-in-the-loop annotation. This is motivated by the same challenge that appears in many applied AI systems: before optimizing a model, we must define what ``good'' means, measure it consistently, and inspect disagreements where reasonable annotators may differ.
+
+\section{Related Work}
+Recent work has begun to examine LLMs in nutrition and health-adjacent advice. NutriBench evaluates LLMs on nutrition estimation from meal descriptions, highlighting the importance of measurable nutrient-level performance \cite{nutribench2024}. Other studies audit LLM-generated dietary recommendations for nutritional and behavioral risk, particularly for vulnerable populations \cite{jmir2026audit}. Work on food allergies and AI-generated diets raises safety concerns when models produce advice for users with allergens \cite{niszczota2023robodiets}. More broadly, medical advice evaluations show that patient-posed questions require explicit safety-oriented assessment rather than relying on generic answer quality \cite{healthadvice2026}.
+
+CraveAlign differs from general meal planning benchmarks by focusing on \textit{adaptation}: the model receives a desired food and a constrained user profile, then must modify the recipe while preserving the user's underlying craving.
+
+\section{Task Definition}
+Each benchmark instance contains a user profile, a craving, an optional base recipe, and target constraints:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{User profile}: allergies, medical or lifestyle restrictions, dietary goals, strictness preference, and taste preferences.
+    \item \textbf{Craving}: the food the user wants, such as ``creamy chicken pasta'' or ``brown sugar milk tea.''
+    \item \textbf{Base recipe}: representative ingredients and preparation method for the original dish.
+    \item \textbf{Constraints}: hard constraints such as allergen avoidance, and soft goals such as lower sodium or higher fiber.
+\end{itemize}
+
+The model must output an adapted recipe, ingredient substitutions, nutrition rationale, and relevant safety caveats. The task is not to provide medical diagnosis or treatment, but to adapt food suggestions within clearly stated constraints. When relevant, the model may identify possible craving dimensions such as texture, flavor, temperature, smell, or satiety. It may also raise nutrition-related hypotheses, such as whether a craving could be connected to protein, iron, or energy needs, but these must be framed as non-diagnostic suggestions that require user context or clinical review.
+
+\section{Methodology}
+We propose a small benchmark, \textit{CraveAlign-Bench}, with synthetic but realistic cases covering three initial profiles:
+
+\begin{enumerate}[leftmargin=*]
+    \item Food allergy, such as peanut or shellfish allergy.
+    \item Hypertension, emphasizing lower sodium and less reliance on processed sauces.
+    \item Type 2 diabetes, emphasizing reduced added sugar and higher fiber.
+\end{enumerate}
+
+Each profile is paired with common cravings across categories such as fried foods, desserts, noodles, pizza, burgers, creamy pasta, and sweet drinks. For a take-home prototype, 20--50 cases are sufficient to demonstrate the evaluation workflow.
+
+CraveAlign also includes two personalization controls:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Strictness level}: strict, balanced, or gentle. Strict outputs prioritize hard safety and nutrition targets; balanced outputs preserve more of the original dish while meeting key constraints; gentle outputs make minimal substitutions intended to improve adherence over time.
+    \item \textbf{Taste profile}: cultural and individual preferences, such as Asian-inspired savory flavors, American comfort food expectations, spice tolerance, texture preferences, and ingredient familiarity.
+\end{itemize}
+
+These controls test whether a model can produce multiple valid adaptations for the same craving instead of assuming one universal healthy recipe.
+
+We compare three system variants:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Vanilla LLM}: directly asks the model to adapt the recipe.
+    \item \textbf{Constrained prompting}: explicitly provides dietary constraints and output schema.
+    \item \textbf{Validator-guided agent}: generates an answer, evaluates it against constraints, and revises if violations are detected.
+\end{itemize}
+
+\section{Evaluation Plan}
+The evaluation combines automatic and human judgments. Automatic checks are useful for detecting obvious violations, while human review is needed for feasibility, craving preservation, and nuanced safety.
+
+\subsection{Automatic Metrics}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Allergen violation rate}: percentage of outputs containing forbidden allergens or close variants.
+    \item \textbf{Constraint pass rate}: percentage of outputs satisfying all hard constraints.
+    \item \textbf{Nutrition improvement score}: heuristic score for reduced sodium, added sugar, saturated fat, and increased fiber or whole-food ingredients.
+    \item \textbf{Strictness calibration}: whether the adaptation matches the requested strict, balanced, or gentle level.
+    \item \textbf{Craving feature preservation}: whether sensory anchors such as crunch, creaminess, spice, temperature, or dish format remain present.
+    \item \textbf{Schema completeness}: whether the model provides recipe, substitutions, rationale, and caveats.
+\end{itemize}
+
+\subsection{Human Rubric}
+Annotators rate each output on a 1--5 scale:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+Dimension & Question \\
+\midrule
+Safety & Does the output avoid unsafe ingredients and misleading medical claims? \\
+Constraint adherence & Does it respect the user's stated restrictions? \\
+Feasibility & Could a real person reasonably cook or buy these ingredients? \\
+Craving preservation & Does it still satisfy the original craving? \\
+Preference fit & Does it reflect the user's cultural and individual taste preferences? \\
+Trade-off quality & Does it handle strictness, calories, and whole-food substitutions appropriately? \\
+Clarity & Is the explanation understandable without overpromising health benefits? \\
+\bottomrule
+\end{tabular}
+\caption{Human evaluation rubric for CraveAlign outputs.}
+\end{table}
+
+Annotator disagreement is expected. Rather than treating disagreement as noise, the framework records it as a signal that a case may require clearer guidelines, domain expert review, or additional constraints. This is especially important for preference fit and craving preservation, where two annotators may reasonably disagree about whether a recipe still counts as the same food experience.
+
+\subsection{Post-Recommendation Feedback}
+A deployed dietary advisor should continue evaluation after the recipe is generated. The system can ask whether the user made the recipe, how it tasted, whether it satisfied the craving, which substitutions felt unacceptable, and whether the strictness level was realistic. This feedback can update future recommendations and create high-value evaluation data. In an applied AI platform, such examples can be routed to human review when feedback is negative, safety-sensitive, or inconsistent with automatic scores.
+
+\section{Pilot Prototype}
+The accompanying code sample implements a lightweight benchmark runner. It reads JSONL cases and model outputs, applies rule-based checks for allergens and restricted ingredients, scores nutrition-oriented substitutions, and exports aggregate metrics. The goal is not to replace expert nutrition review, but to demonstrate how an evaluation pipeline could support human reviewers by surfacing likely failures.
+
+\section{Anticipated Contribution}
+This project contributes:
+
+\begin{enumerate}[leftmargin=*]
+    \item A benchmark framing for craving-aware recipe adaptation under patient-specific constraints.
+    \item A multi-dimensional evaluation rubric for safety, feasibility, constraint adherence, nutrition improvement, preference fit, trade-off quality, and craving preservation.
+    \item A prototype evaluation script showing how automatic checks can be combined with human-in-the-loop review.
+\end{enumerate}
+
+For applied AI platforms, this framing matters because the hardest part is often not generating an answer, but building the feedback loop that makes model behavior measurable, inspectable, and improvable.
+
+\section{Limitations and Ethics}
+This project is health-adjacent rather than a clinical decision system. It should not be used to provide medical diagnosis, treatment, or personalized clinical nutrition plans without qualified expert oversight. In particular, craving analysis should not claim that a user has a nutrient deficiency based only on a food request. At most, the system can surface cautious hypotheses, ask follow-up questions, or recommend professional guidance when health risk is high.
+
+The initial benchmark uses synthetic profiles, which makes it useful for controlled evaluation but insufficient for deployment. Future work should include registered dietitian review, more diverse cultural food contexts, better nutrition databases, clearer handling of severe allergies and medical conditions, and longitudinal feedback on whether users actually prepare and repeat the suggested recipes.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
