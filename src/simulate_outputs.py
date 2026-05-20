@@ -1,6 +1,6 @@
 """Placeholder for future LLM integrations.
 
-The take-home prototype is intentionally runnable without API keys. In a fuller
+The preliminary draft is intentionally runnable without API keys. In a fuller
 version, this module would call one or more LLMs with standardized prompts and
 write JSONL outputs matching data/sample_model_outputs.jsonl.
 """
