@@ -51,9 +51,21 @@
           <fieldset>
             <legend>Strictness</legend>
             <div class="segmented" role="radiogroup" aria-label="Strictness">
-              <label><input type="radio" name="strictness" value="strict"> Strict</label>
-              <label><input type="radio" name="strictness" value="balanced" checked> Balanced</label>
-              <label><input type="radio" name="strictness" value="gentle"> Gentle</label>
+              <label>
+                <input type="radio" name="strictness" value="strict">
+                <strong>Strict</strong>
+                <small>Safety first</small>
+              </label>
+              <label>
+                <input type="radio" name="strictness" value="balanced" checked>
+                <strong>Balanced</strong>
+                <small>Best default</small>
+              </label>
+              <label>
+                <input type="radio" name="strictness" value="gentle">
+                <strong>Gentle</strong>
+                <small>Small swaps</small>
+              </label>
             </div>
           </fieldset>
 
@@ -64,6 +76,14 @@
         </aside>
 
         <section class="output-area" aria-live="polite">
+          <section class="panel summary-card">
+            <div>
+              <p class="eyebrow">Current scenario</p>
+              <h2 id="scenarioTitle">Hypertension + fried chicken sandwich</h2>
+            </div>
+            <p id="scenarioCopy">Adapt the craving without losing the crispy sandwich experience.</p>
+          </section>
+
           <section class="insight-strip">
             <div>
               <span class="mini-label">Craving signal</span>

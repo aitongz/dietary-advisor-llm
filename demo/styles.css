@@ -10,6 +10,8 @@
   --blue: #315f72;
   --green: #2d7151;
   --gold: #b8842d;
+  --soft-red: #f5e5df;
+  --soft-blue: #e7f0f3;
   --shadow: 0 16px 40px rgba(30, 37, 40, 0.10);
 }
 
@@ -23,7 +25,7 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background:
-    linear-gradient(rgba(245, 242, 236, 0.88), rgba(245, 242, 236, 0.88)),
+    linear-gradient(rgba(247, 245, 240, 0.94), rgba(247, 245, 240, 0.94)),
     url("data:image/svg+xml,%3Csvg width='1200' height='800' viewBox='0 0 1200 800' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1200' height='800' fill='%23eadfce'/%3E%3Cpath d='M0 520 C230 430 340 570 560 480 C770 395 910 500 1200 410 L1200 800 L0 800 Z' fill='%23d7e5dc'/%3E%3Cpath d='M110 160 h240 v170 h-240z' fill='%23ffffff' opacity='.55'/%3E%3Ccircle cx='210' cy='245' r='64' fill='%23c95d4b' opacity='.42'/%3E%3Crect x='720' y='130' width='290' height='210' rx='4' fill='%23ffffff' opacity='.5'/%3E%3Cpath d='M760 270 c60 -90 150 -90 210 0z' fill='%23315f72' opacity='.28'/%3E%3C/svg%3E");
   background-size: cover;
 }
@@ -62,14 +64,14 @@ select {
 
 .app-shell {
   min-height: 100vh;
-  padding: 24px;
+  padding: 18px;
 }
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
-  gap: 20px;
-  max-width: 1280px;
+  grid-template-columns: minmax(300px, 350px) minmax(0, 1fr);
+  gap: 16px;
+  max-width: 1220px;
   margin: 0 auto;
 }
 
@@ -81,10 +83,12 @@ select {
 }
 
 .input-panel {
-  padding: 20px;
+  position: sticky;
+  top: 18px;
+  padding: 18px;
   align-self: start;
   display: grid;
-  gap: 10px;
+  gap: 9px;
 }
 
 .brand-row,
@@ -114,13 +118,13 @@ p {
 
 h1 {
   margin-bottom: 4px;
-  font-size: 25px;
+  font-size: 22px;
   line-height: 1.1;
 }
 
 h2 {
   margin-bottom: 0;
-  font-size: 30px;
+  font-size: 26px;
   line-height: 1.15;
 }
 
@@ -139,7 +143,7 @@ legend {
 input,
 select {
   width: 100%;
-  min-height: 42px;
+  min-height: 40px;
   padding: 9px 10px;
   border: 1px solid #c5ced1;
   border-radius: 6px;
@@ -156,21 +160,51 @@ fieldset {
 .segmented {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+  gap: 7px;
   margin-top: 8px;
 }
 
 .segmented label {
-  min-height: 38px;
+  position: relative;
+  min-height: 74px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 7px;
+  gap: 4px;
+  padding: 10px 8px;
   border: 1px solid #c5ced1;
   border-radius: 6px;
   background: #fbfbf9;
-  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.segmented label.is-selected {
+  border-color: var(--tomato);
+  background: var(--soft-red);
+  box-shadow: inset 0 0 0 1px var(--tomato);
+}
+
+.segmented input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented strong {
+  font-size: 13px;
+  line-height: 1.1;
+}
+
+.segmented small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.1;
 }
 
 .primary-action {
@@ -186,12 +220,26 @@ fieldset {
 
 .output-area {
   display: grid;
-  gap: 18px;
+  gap: 14px;
+}
+
+.summary-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+  gap: 20px;
+  align-items: center;
+  padding: 18px 20px;
+}
+
+#scenarioCopy {
+  margin-bottom: 0;
+  color: #354044;
+  line-height: 1.5;
 }
 
 .top-strip {
-  min-height: 112px;
-  padding: 22px;
+  min-height: 96px;
+  padding: 18px 20px;
   background: rgba(220, 236, 227, 0.94);
   border: 1px solid #c5d8cd;
   border-radius: 8px;
@@ -204,8 +252,8 @@ fieldset {
 }
 
 .insight-strip > div {
-  min-height: 70px;
-  padding: 16px;
+  min-height: 66px;
+  padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.92);
@@ -264,13 +312,13 @@ fieldset {
 .result-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
-  gap: 18px;
+  gap: 14px;
 }
 
 .recipe-panel,
 .eval-panel,
 .feedback-panel {
-  padding: 20px;
+  padding: 18px;
 }
 
 #recipeBody,
@@ -357,6 +405,7 @@ fieldset {
   .workspace,
   .result-grid,
   .insight-strip,
+  .summary-card,
   .feedback-grid {
     grid-template-columns: 1fr;
   }

@@ -300,6 +300,9 @@ function render() {
   const result = buildAdaptation();
   const scores = scoreAdaptation(result);
 
+  const conditionLabel = document.getElementById("condition").selectedOptions[0].textContent.split("/")[0].trim();
+  document.getElementById("scenarioTitle").textContent = `${conditionLabel} + ${result.craving}`;
+  document.getElementById("scenarioCopy").textContent = `Generate a ${result.strictness} adaptation with a ${result.tasteLabel} flavor profile, then score it for safety, constraints, nutrition, feasibility, preference fit, and craving preservation.`;
   document.getElementById("recipeTitle").textContent = result.title;
   document.getElementById("overallScore").textContent = scores.overall;
   document.getElementById("recipeBody").textContent = result.recipe;
@@ -330,6 +333,14 @@ function render() {
     ? "Potential hard-avoid term appeared in the final recipe. A real system should block or revise this output before showing it."
     : `${result.caveat} This demo can suggest cautious nutrition hypotheses, but it should not diagnose nutrient deficiencies.`;
   document.getElementById("safetyNote").textContent = safetyNote;
+  updateStrictnessCards();
+}
+
+function updateStrictnessCards() {
+  document.querySelectorAll(".segmented label").forEach((label) => {
+    const input = label.querySelector("input");
+    label.classList.toggle("is-selected", input.checked);
+  });
 }
 
 document.getElementById("generate").addEventListener("click", render);
