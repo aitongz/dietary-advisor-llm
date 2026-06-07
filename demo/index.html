@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CraveAlign Demo</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace">
+        <aside class="panel input-panel" aria-label="User profile">
+          <div class="brand-row">
+            <div>
+              <p class="eyebrow">CraveAlign</p>
+              <h1>Dietary Advisor Demo</h1>
+            </div>
+            <span class="status-pill">Prototype</span>
+          </div>
+
+          <label for="craving">Craving</label>
+          <input id="craving" type="text" value="fried chicken sandwich">
+          <div class="example-row" aria-label="Example cravings">
+            <button type="button" class="example-chip" data-example="chicken">Chicken</button>
+            <button type="button" class="example-chip" data-example="ramen">Ramen</button>
+            <button type="button" class="example-chip" data-example="pizza">Pizza</button>
+            <button type="button" class="example-chip" data-example="brownie">Brownie</button>
+            <button type="button" class="example-chip" data-example="milk_tea">Milk tea</button>
+          </div>
+
+          <label for="condition">Health context</label>
+          <select id="condition">
+            <option value="hypertension">Hypertension / lower sodium</option>
+            <option value="type_2_diabetes">Type 2 diabetes / lower added sugar</option>
+            <option value="peanut_allergy">Peanut allergy</option>
+            <option value="shellfish_allergy">Shellfish allergy</option>
+            <option value="general_clean">General whole-food preference</option>
+          </select>
+
+          <label for="allergies">Allergies or hard avoids</label>
+          <input id="allergies" type="text" value="" placeholder="e.g. peanut, shrimp">
+
+          <label for="taste">Taste preference</label>
+          <select id="taste">
+            <option value="spicy_asian">Spicy Asian-inspired</option>
+            <option value="american_comfort">American comfort food</option>
+            <option value="mediterranean">Mediterranean</option>
+            <option value="simple_mild">Simple and mild</option>
+          </select>
+
+          <fieldset>
+            <legend>Strictness</legend>
+            <div class="segmented" role="radiogroup" aria-label="Strictness">
+              <label><input type="radio" name="strictness" value="strict"> Strict</label>
+              <label><input type="radio" name="strictness" value="balanced" checked> Balanced</label>
+              <label><input type="radio" name="strictness" value="gentle"> Gentle</label>
+            </div>
+          </fieldset>
+
+          <label for="effort">Cooking effort</label>
+          <input id="effort" type="range" min="1" max="5" value="3">
+
+          <button id="generate" class="primary-action" type="button">Generate Adaptation</button>
+        </aside>
+
+        <section class="output-area" aria-live="polite">
+          <section class="insight-strip">
+            <div>
+              <span class="mini-label">Craving signal</span>
+              <strong id="cravingSignal">crispy, spicy, handheld comfort</strong>
+            </div>
+            <div>
+              <span class="mini-label">Trade-off</span>
+              <strong id="tradeoffSignal">balanced health gains with recognizable comfort-food format</strong>
+            </div>
+          </section>
+
+          <div class="top-strip">
+            <div>
+              <p class="eyebrow">Adapted recipe</p>
+              <h2 id="recipeTitle">Oven-Crisp Chicken Sandwich</h2>
+            </div>
+            <div class="score-block">
+              <span id="overallScore">92</span>
+              <small>overall</small>
+            </div>
+          </div>
+
+          <div class="result-grid">
+            <article class="panel recipe-panel">
+              <h3>Recipe</h3>
+              <p id="recipeBody"></p>
+              <h3>Substitutions</h3>
+              <div id="substitutions" class="substitution-list"></div>
+            </article>
+
+            <article class="panel eval-panel">
+              <h3>Evaluation</h3>
+              <div id="metrics" class="metrics-list"></div>
+              <h3>Safety Note</h3>
+              <p id="safetyNote"></p>
+            </article>
+          </div>
+
+          <section class="panel feedback-panel">
+            <div>
+              <h3>Feedback Loop</h3>
+              <p class="muted">These answers would become evaluation data in a real system.</p>
+            </div>
+            <div class="feedback-grid">
+              <label>
+                Would you cook this?
+                <select id="wouldCook">
+                  <option>Yes</option>
+                  <option>Maybe</option>
+                  <option>No</option>
+                </select>
+              </label>
+              <label>
+                Craving satisfied?
+                <select id="satisfied">
+                  <option>Mostly</option>
+                  <option>Somewhat</option>
+                  <option>No</option>
+                </select>
+              </label>
+              <label>
+                What should improve?
+                <input id="improve" type="text" placeholder="e.g. more crunch, less prep">
+              </label>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
